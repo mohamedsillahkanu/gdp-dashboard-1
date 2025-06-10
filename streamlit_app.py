@@ -362,10 +362,10 @@ with col4:
 st.markdown("---")  # Add a horizontal line separator
 
 # Streamlit App
-st.title("📊 Text Data Extraction & Visualization")
+st.title("📊 School Based Distribution of ITNs in SL")
 
 # Upload file
-uploaded_file = "latest_sbd_06_10_2025.xlsx"
+uploaded_file = "latest_sbd1_06_10_2025.xlsx"
 if uploaded_file:
     # Read the uploaded Excel file
     df_original = pd.read_excel(uploaded_file)
