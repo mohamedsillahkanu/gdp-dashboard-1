@@ -386,7 +386,7 @@ with col4:
 st.markdown("---")  # Add a horizontal line separator
 
 # Streamlit App
-st.title("📊 Text Data Extraction & Visualization")
+st.title("📊 School Based Distribution of ITNs in SL")
 
 # Upload file
 uploaded_file = "latest_sbd1_06_10_2025.xlsx"
