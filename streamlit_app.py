@@ -207,9 +207,8 @@ def generate_summaries(df):
     # Total ITNs = boys + girls (actual beneficiaries)
     overall_summary['total_itn'] = overall_summary['total_boys'] + overall_summary['total_girls']
     
-    # Calculate coverage and gender ratio
+    # Calculate coverage
     overall_summary['coverage'] = (overall_summary['total_itn'] / overall_summary['total_enrollment'] * 100) if overall_summary['total_enrollment'] > 0 else 0
-    overall_summary['gender_ratio'] = (overall_summary['total_girls'] / overall_summary['total_boys'] * 100) if overall_summary['total_boys'] > 0 else 0
     overall_summary['itn_remaining'] = overall_summary['total_enrollment'] - overall_summary['total_itn']
     
     summaries['overall'] = overall_summary
@@ -245,9 +244,8 @@ def generate_summaries(df):
         # Total ITNs = boys + girls (actual beneficiaries)
         district_stats['itn'] = district_stats['boys'] + district_stats['girls']
         
-        # Calculate coverage and gender ratio
+        # Calculate coverage
         district_stats['coverage'] = (district_stats['itn'] / district_stats['enrollment'] * 100) if district_stats['enrollment'] > 0 else 0
-        district_stats['gender_ratio'] = (district_stats['girls'] / district_stats['boys'] * 100) if district_stats['boys'] > 0 else 0
         district_stats['itn_remaining'] = district_stats['enrollment'] - district_stats['itn']
         
         district_summary.append(district_stats)
@@ -287,9 +285,8 @@ def generate_summaries(df):
             # Total ITNs = boys + girls (actual beneficiaries)
             chiefdom_stats['itn'] = chiefdom_stats['boys'] + chiefdom_stats['girls']
             
-            # Calculate coverage and gender ratio
+            # Calculate coverage
             chiefdom_stats['coverage'] = (chiefdom_stats['itn'] / chiefdom_stats['enrollment'] * 100) if chiefdom_stats['enrollment'] > 0 else 0
-            chiefdom_stats['gender_ratio'] = (chiefdom_stats['girls'] / chiefdom_stats['boys'] * 100) if chiefdom_stats['boys'] > 0 else 0
             chiefdom_stats['itn_remaining'] = chiefdom_stats['enrollment'] - chiefdom_stats['itn']
             
             chiefdom_summary.append(chiefdom_stats)
@@ -1150,21 +1147,24 @@ if uploaded_file:
                 chiefdom_data = district_data[district_data['Chiefdom'] == chiefdom]
                 
                 total_enrollment = 0
-                total_itn = 0
+                total_boys = 0
+                total_girls = 0
                 
                 for class_num in range(1, 6):
+                    # Use "Number of enrollments in class X" for total students
+                    enrollment_col = f"Number of enrollments in class {class_num}"
+                    if enrollment_col in chiefdom_data.columns:
+                        total_enrollment += int(chiefdom_data[enrollment_col].fillna(0).sum())
+                    
+                    # Use boys + girls for total ITNs (actual beneficiaries)
                     boys_col = f"Number of boys in class {class_num}"
                     girls_col = f"Number of girls in class {class_num}"
-                    itn_col = f"Number of ITN distributed to class {class_num}"
-                    
                     if boys_col in chiefdom_data.columns:
-                        total_enrollment += chiefdom_data[boys_col].fillna(0).sum()
+                        total_boys += int(chiefdom_data[boys_col].fillna(0).sum())
                     if girls_col in chiefdom_data.columns:
-                        total_enrollment += chiefdom_data[girls_col].fillna(0).sum()
-                    if itn_col in chiefdom_data.columns:
-                        total_itn += chiefdom_data[itn_col].fillna(0).sum()
+                        total_girls += int(chiefdom_data[girls_col].fillna(0).sum())
                 
-                # Calculate coverage percentage
+                total_itn = total_boys + total_girls  # Total ITNs = boys + girls
                 coverage = (total_itn / total_enrollment * 100) if total_enrollment > 0 else 0
                 
                 district_chiefdom_analysis.append({
@@ -1612,26 +1612,26 @@ if uploaded_file:
             # Add overall summary charts
             doc.add_heading('Overall Analysis Charts', level=1)
             
-            # Add enrollment chart
-            if 'enrollment_by_district' in map_images:
-                doc.add_heading('Total Enrollment by District', level=2)
-                doc.add_paragraph("Student enrollment across all surveyed districts:")
+            # Add enhanced enrollment analysis chart
+            if 'enhanced_enrollment_analysis' in map_images:
+                doc.add_heading('Enhanced Enrollment vs ITN Distribution Analysis', level=2)
+                doc.add_paragraph("Comprehensive analysis showing total enrollment, ITNs distributed (boys + girls), and remaining ITNs needed across districts:")
                 chart_para = doc.add_paragraph()
                 chart_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
                 chart_run = chart_para.add_run()
-                map_images['enrollment_by_district'].seek(0)
-                chart_run.add_picture(map_images['enrollment_by_district'], width=Inches(6.5))
+                map_images['enhanced_enrollment_analysis'].seek(0)
+                chart_run.add_picture(map_images['enhanced_enrollment_analysis'], width=Inches(6.5))
                 doc.add_paragraph()  # Add spacing
             
-            # Add ITN distribution chart
-            if 'itn_by_district' in map_images:
-                doc.add_heading('Total ITN Distribution by District', level=2)
-                doc.add_paragraph("ITN distribution across all surveyed districts:")
+            # Add overall distribution pie chart
+            if 'overall_distribution_pie' in map_images:
+                doc.add_heading('Overall ITN Distribution Status', level=2)
+                doc.add_paragraph("Overall distribution status showing the proportion of students who have received ITNs versus those still waiting:")
                 chart_para = doc.add_paragraph()
                 chart_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
                 chart_run = chart_para.add_run()
-                map_images['itn_by_district'].seek(0)
-                chart_run.add_picture(map_images['itn_by_district'], width=Inches(6.5))
+                map_images['overall_distribution_pie'].seek(0)
+                chart_run.add_picture(map_images['overall_distribution_pie'], width=Inches(5.5))
                 doc.add_paragraph()  # Add spacing
             
             # Add gender analysis charts
@@ -1739,13 +1739,13 @@ if uploaded_file:
             doc.add_heading('District Summary Table', level=1)
             
             # Create district summary table
-            table = doc.add_table(rows=1, cols=9)
+            table = doc.add_table(rows=1, cols=8)
             table.style = 'Table Grid'
             table.alignment = WD_TABLE_ALIGNMENT.CENTER
             
             # Add header row
             hdr_cells = table.rows[0].cells
-            headers = ['District', 'Schools', 'Chiefdoms', 'Boys', 'Girls', 'Total Enrollment', 'ITNs', 'Coverage (%)', 'Gender Ratio (%)']
+            headers = ['District', 'Schools', 'Chiefdoms', 'Boys', 'Girls', 'Total Enrollment', 'ITNs', 'Coverage (%)']
             for i, header in enumerate(headers):
                 hdr_cells[i].text = header
                 for paragraph in hdr_cells[i].paragraphs:
@@ -1763,20 +1763,19 @@ if uploaded_file:
                 row_cells[5].text = f"{int(district_info['enrollment']):,}"
                 row_cells[6].text = f"{int(district_info['itn']):,}"
                 row_cells[7].text = f"{district_info['coverage']:.1f}%"
-                row_cells[8].text = f"{district_info['gender_ratio']:.1f}%"
             
             # Add Chiefdom Summary Table
             doc.add_page_break()
             doc.add_heading('Chiefdom Summary Table', level=1)
             
             # Create chiefdom summary table
-            table2 = doc.add_table(rows=1, cols=9)
+            table2 = doc.add_table(rows=1, cols=8)
             table2.style = 'Table Grid'
             table2.alignment = WD_TABLE_ALIGNMENT.CENTER
             
             # Add header row
             hdr_cells2 = table2.rows[0].cells
-            headers2 = ['District', 'Chiefdom', 'Schools', 'Boys', 'Girls', 'Total Enrollment', 'ITNs', 'Coverage (%)', 'Gender Ratio (%)']
+            headers2 = ['District', 'Chiefdom', 'Schools', 'Boys', 'Girls', 'Total Enrollment', 'ITNs', 'Coverage (%)']
             for i, header in enumerate(headers2):
                 hdr_cells2[i].text = header
                 for paragraph in hdr_cells2[i].paragraphs:
@@ -1794,7 +1793,6 @@ if uploaded_file:
                 row_cells2[5].text = f"{int(chiefdom_info['enrollment']):,}"
                 row_cells2[6].text = f"{int(chiefdom_info['itn']):,}"
                 row_cells2[7].text = f"{chiefdom_info['coverage']:.1f}%"
-                row_cells2[8].text = f"{chiefdom_info['gender_ratio']:.1f}%"
             
             # Add Gender Analysis Summary
             doc.add_page_break()
@@ -1805,7 +1803,6 @@ if uploaded_file:
             
             • Total Boys: {summaries['overall']['total_boys']:,} ({summaries['overall']['total_boys']/summaries['overall']['total_enrollment']*100:.1f}%)
             • Total Girls: {summaries['overall']['total_girls']:,} ({summaries['overall']['total_girls']/summaries['overall']['total_enrollment']*100:.1f}%)
-            • Gender Ratio (Girls per 100 Boys): {summaries['overall']['gender_ratio']:.1f}
             
             GENDER DISTRIBUTION BY DISTRICT:
             """
@@ -1818,8 +1815,7 @@ if uploaded_file:
             
             {district_info['district']} District:
             • Boys: {district_info['boys']:,} ({boys_pct:.1f}%)
-            • Girls: {district_info['girls']:,} ({girls_pct:.1f}%)
-            • Gender Ratio: {district_info['gender_ratio']:.1f}"""
+            • Girls: {district_info['girls']:,} ({girls_pct:.1f}%)"""
             
             doc.add_paragraph(gender_analysis_text)
             
@@ -1874,7 +1870,7 @@ if uploaded_file:
             worst_district = district_performance[-1] if district_performance else ("N/A", 0)
             
             recommendations_text = f"""
-            Based on the comprehensive analysis of SBD data with district, chiefdom, and gender analytics, the following recommendations are proposed:
+            Based on the comprehensive analysis of SBD data with district and chiefdom analytics, the following recommendations are proposed:
             
             IMMEDIATE ACTIONS:
             
@@ -1889,15 +1885,13 @@ if uploaded_file:
                • Share lessons learned across all districts
             
             3. GENDER EQUITY FOCUS:
-               • Overall gender ratio: {summaries['overall']['gender_ratio']:.1f} girls per 100 boys
-               • Address gender disparities where identified
                • Ensure equal access to ITN distribution for boys and girls
+               • Monitor gender-disaggregated data collection
             
             4. MONITORING & EVALUATION:
                • Establish real-time tracking systems for ITN distribution
                • Implement quarterly review meetings with district teams
                • Develop standardized reporting formats with visual dashboards
-               • Monitor gender-disaggregated data collection
             
             STRATEGIC RECOMMENDATIONS:
             
@@ -1909,7 +1903,7 @@ if uploaded_file:
             
             {district_info['district']} District:
             • Coverage: {district_info['coverage']:.1f}% | Schools: {district_info['schools']} | Students: {district_info['enrollment']:,}
-            • Gender Ratio: {district_info['gender_ratio']:.1f} girls per 100 boys
+            • Boys: {district_info['boys']:,} | Girls: {district_info['girls']:,}
             • Recommended Actions: {'Maintain high performance and share best practices' if district_info['coverage'] > summaries['overall']['coverage'] else 'Require intensive support and resource allocation'}"""
             
             recommendations_text += f"""
