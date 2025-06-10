@@ -316,13 +316,13 @@ with col1:
 
 with col2:
     try:
-        st.image("icf_sl (1) (1).jpg", width=230)
+        st.image("icf_sl.png", width=230)
         st.markdown('<p style="text-align: center; font-size: 12px; font-weight: 600; color: #2c3e50; margin-top: 5px;">ICF Sierra Leone</p>', unsafe_allow_html=True)
     except:
         st.markdown("""
         <div style="width: 230px; height: 160px; border: 2px dashed #3498db; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f8f9fd, #e3f2fd); border-radius: 10px; margin: 0 auto;">
             <div style="text-align: center; color: #666; font-size: 11px;">
-                icf_sl (1) (1).jpg<br>Not Found
+                icf_sl.png<br>Not Found
             </div>
         </div>
         <p style="text-align: center; font-size: 12px; font-weight: 600; color: #2c3e50; margin-top: 5px;">ICF Sierra Leone</p>
