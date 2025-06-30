@@ -362,7 +362,7 @@ st.markdown("---")  # Add a horizontal line separator
 st.title("📊 School Based Distribution of ITNs in SL")
 
 # Upload file
-uploaded_file = "GMB253374_SBD_ITN_clean.xlsx"
+uploaded_file = "sbd first_submission_clean.xlsx"
 if uploaded_file:
     # Read the uploaded Excel file
     df_original = pd.read_excel(uploaded_file)
@@ -1437,8 +1437,8 @@ if uploaded_file:
                     if enrollment_col in group_data.columns:
                         total_enrollment += int(group_data[enrollment_col].fillna(0).sum())
                     
-                    # gender columns
-                    boys_col = f"How many boys in Class {class_num} received ITNs?
+                    # ITN columns
+                    boys_col = f"How many boys in Class {class_num} received ITNs?"
                     girls_col = f"How many girls in Class {class_num} received ITNs?"
                     if boys_col in group_data.columns:
                         total_itns += int(group_data[boys_col].fillna(0).sum())
@@ -2065,4 +2065,3 @@ if uploaded_file:
         with st.expander("📁 View Saved Map Files"):
             for map_name in map_images.keys():
                 st.write(f"• {map_name}.png")
-
