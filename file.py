@@ -192,13 +192,13 @@ def generate_summaries(df):
     # Calculate totals using the correct columns
     for class_num in range(1, 6):
         # Total enrollment from "Number of enrollments in class X"
-        enrollment_col = f"Number of enrollments in class {class_num}"
+        enrollment_col = f"How many pupils are enrolled in Class {class_num}?"
         if enrollment_col in df.columns:
             overall_summary['total_enrollment'] += int(df[enrollment_col].fillna(0).sum())
         
         # Boys and girls for gender analysis AND ITN calculation
-        boys_col = f"Number of boys in class {class_num}"
-        girls_col = f"Number of girls in class {class_num}"
+        boys_col = f"How many boys in Class {class_num} received ITNs?"
+        girls_col = f"How many girls in Class {class_num} received ITNs?"
         if boys_col in df.columns:
             overall_summary['total_boys'] += int(df[boys_col].fillna(0).sum())
         if girls_col in df.columns:
@@ -229,13 +229,13 @@ def generate_summaries(df):
         
         for class_num in range(1, 6):
             # Total enrollment from "Number of enrollments in class X"
-            enrollment_col = f"Number of enrollments in class {class_num}"
+            enrollment_col = f"How many pupils are enrolled in Class {class_num}?"
             if enrollment_col in district_data.columns:
                 district_stats['enrollment'] += int(district_data[enrollment_col].fillna(0).sum())
             
             # Boys and girls for gender analysis AND ITN calculation
-            boys_col = f"Number of boys in class {class_num}"
-            girls_col = f"Number of girls in class {class_num}"
+            boys_col = f"How many boys in Class {class_num} received ITNs?"
+            girls_col = f"How many girls in Class {class_num} received ITNs?"
             if boys_col in district_data.columns:
                 district_stats['boys'] += int(district_data[boys_col].fillna(0).sum())
             if girls_col in district_data.columns:
@@ -270,13 +270,13 @@ def generate_summaries(df):
             
             for class_num in range(1, 6):
                 # Total enrollment from "Number of enrollments in class X"
-                enrollment_col = f"Number of enrollments in class {class_num}"
+                enrollment_col = f"How many pupils are enrolled in Class {class_num}?"
                 if enrollment_col in chiefdom_data.columns:
                     chiefdom_stats['enrollment'] += int(chiefdom_data[enrollment_col].fillna(0).sum())
                 
                 # Boys and girls for gender analysis AND ITN calculation
-                boys_col = f"Number of boys in class {class_num}"
-                girls_col = f"Number of girls in class {class_num}"
+                boys_col = f"How many boys in Class {class_num} received ITNs?"
+                girls_col = f"How many girls in Class {class_num} received ITNs?"
                 if boys_col in chiefdom_data.columns:
                     chiefdom_stats['boys'] += int(chiefdom_data[boys_col].fillna(0).sum())
                 if girls_col in chiefdom_data.columns:
