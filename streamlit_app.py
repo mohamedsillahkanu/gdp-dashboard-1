@@ -362,7 +362,7 @@ st.markdown("---")  # Add a horizontal line separator
 st.title("📊 School Based Distribution of ITNs in SL")
 
 # Upload file
-uploaded_file = "SBD_07_01_2025_3PM.xlsx"
+uploaded_file = "SBD_07_02_lastest.xlsx"
 if uploaded_file:
     # Read the uploaded Excel file
     df_original = pd.read_excel(uploaded_file)
@@ -855,9 +855,9 @@ if uploaded_file:
     with col1:
         st.metric("Total Schools", f"{summaries['overall']['total_schools']:,}")
     with col2:
-        st.metric("Total Students", f"{summaries['overall']['total_enrollment']:,}")
+        st.metric("Total Students in current school register (2025)", f"{summaries['overall']['total_enrollment']:,}")
     with col3:
-        st.metric("Total ITNs", f"{summaries['overall']['total_itn']:,}")
+        st.metric("Total ITNs given to pupils present at the time of distribution", f"{summaries['overall']['total_itn']:,}")
     with col4:
         st.metric("Coverage", f"{summaries['overall']['coverage']:.1f}%")
     
