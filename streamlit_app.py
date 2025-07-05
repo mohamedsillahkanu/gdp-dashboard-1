@@ -872,7 +872,7 @@ if uploaded_file:
     with col1:
         st.metric("Total Schools", f"{summaries['overall']['total_schools']:,}")
     with col2:
-        st.metric("Total Students in current school register (2025)", f"{summaries['overall']['total_enrollment']:,}")
+        st.metric("Total pupils in current school register (2025)", f"{summaries['overall']['total_enrollment']:,}")
     with col3:
         st.metric("Total ITNs (given + left in school)", f"{summaries['overall']['total_itn']:,}")
     with col4:
