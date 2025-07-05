@@ -871,7 +871,7 @@ if uploaded_file:
     with col2:
         st.metric("Total Students in current school register (2025)", f"{summaries['overall']['total_enrollment']:,}")
     with col3:
-        st.metric("Total ITNs given to pupils present at the time of distribution", f"{summaries['overall']['total_itn']:,}")
+        st.metric("Total ITNs (given + left in school)", f"{summaries['overall']['total_itn']:,}")
     with col4:
         st.metric("Coverage", f"{summaries['overall']['coverage']:.1f}%")
     
@@ -881,9 +881,9 @@ if uploaded_file:
     with col6:
         st.metric("Chiefdoms", f"{summaries['overall']['total_chiefdoms']}")
     with col7:
-        st.metric("Boys", f"{summaries['overall']['total_boys']:,}")
+        st.metric("Boys that received ITNs", f"{summaries['overall']['total_boys']:,}")
     with col8:
-        st.metric("Girls", f"{summaries['overall']['total_girls']:,}")
+        st.metric("Girls that received ITNs", f"{summaries['overall']['total_girls']:,}")
     
     # Gender Analysis
     st.subheader("👫 Gender Analysis")
