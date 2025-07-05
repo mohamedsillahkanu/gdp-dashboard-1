@@ -199,13 +199,17 @@ def generate_summaries(df):
         # Boys and girls for gender analysis AND ITN calculation
         boys_col = f"How many boys in Class {class_num} received ITNs?"
         girls_col = f"How many girls in Class {class_num} received ITNs?"
+        itn_left_col = f"ITNs left at the school for pupils who were absent."
+        
         if boys_col in df.columns:
             overall_summary['total_boys'] += int(df[boys_col].fillna(0).sum())
         if girls_col in df.columns:
             overall_summary['total_girls'] += int(df[girls_col].fillna(0).sum())
+        if itn_left_col in df.columns:
+            overall_summary['total_left'] += int(df[itn_left_col].fillna(0).sum())
     
     # Total ITNs = boys + girls (actual beneficiaries)
-    overall_summary['total_itn'] = overall_summary['total_boys'] + overall_summary['total_girls']
+    overall_summary['total_itn'] = overall_summary['total_boys'] + overall_summary['total_girls'] + overall_summary['total_left']
     
     # Calculate coverage
     overall_summary['coverage'] = (overall_summary['total_itn'] / overall_summary['total_enrollment'] * 100) if overall_summary['total_enrollment'] > 0 else 0
@@ -236,13 +240,18 @@ def generate_summaries(df):
             # Boys and girls for gender analysis AND ITN calculation
             boys_col = f"How many boys in Class {class_num} received ITNs?"
             girls_col = f"How many girls in Class {class_num} received ITNs?"
+            itn_left_col = f"ITNs left at the school for pupils who were absent."
+            
             if boys_col in district_data.columns:
                 district_stats['boys'] += int(district_data[boys_col].fillna(0).sum())
             if girls_col in district_data.columns:
                 district_stats['girls'] += int(district_data[girls_col].fillna(0).sum())
+                
+            if itn_left_col in district_data.columns:
+                district_stats['left'] += int(district_data[itn_left_col].fillna(0).sum())
         
         # Total ITNs = boys + girls (actual beneficiaries)
-        district_stats['itn'] = district_stats['boys'] + district_stats['girls']
+        district_stats['itn'] = district_stats['boys'] + district_stats['girls'] + district_stats['left']
         
         # Calculate coverage
         district_stats['coverage'] = (district_stats['itn'] / district_stats['enrollment'] * 100) if district_stats['enrollment'] > 0 else 0
@@ -277,13 +286,18 @@ def generate_summaries(df):
                 # Boys and girls for gender analysis AND ITN calculation
                 boys_col = f"How many boys in Class {class_num} received ITNs?"
                 girls_col = f"How many girls in Class {class_num} received ITNs?"
+                itn_left_col = f"ITNs left at the school for pupils who were absent."
+                
                 if boys_col in chiefdom_data.columns:
                     chiefdom_stats['boys'] += int(chiefdom_data[boys_col].fillna(0).sum())
                 if girls_col in chiefdom_data.columns:
                     chiefdom_stats['girls'] += int(chiefdom_data[girls_col].fillna(0).sum())
+
+                if itn_left_col in chiefdom_data.columns:
+                    chiefdom_stats['left'] += int(chiefdom_data[itn_left_col].fillna(0).sum())
             
-            # Total ITNs = boys + girls (actual beneficiaries)
-            chiefdom_stats['itn'] = chiefdom_stats['boys'] + chiefdom_stats['girls']
+            # Total ITNs = boys + girls + left (actual beneficiaries)
+            chiefdom_stats['itn'] = chiefdom_stats['boys'] + chiefdom_stats['girls'] + chiefdom_stats['left']
             
             # Calculate coverage
             chiefdom_stats['coverage'] = (chiefdom_stats['itn'] / chiefdom_stats['enrollment'] * 100) if chiefdom_stats['enrollment'] > 0 else 0
