@@ -229,7 +229,8 @@ def generate_summaries(df):
             'boys': 0,
             'girls': 0,
             'enrollment': 0,
-            'itn': 0
+            'itn': 0,
+            'left': 0
         }
         
         for class_num in range(1, 6):
@@ -275,7 +276,8 @@ def generate_summaries(df):
                 'boys': 0,
                 'girls': 0,
                 'enrollment': 0,
-                'itn': 0
+                'itn': 0,
+                'left': 0
             }
             
             for class_num in range(1, 6):
