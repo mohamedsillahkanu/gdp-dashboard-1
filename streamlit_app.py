@@ -186,7 +186,8 @@ def generate_summaries(df):
         'total_boys': 0,
         'total_girls': 0,
         'total_enrollment': 0,
-        'total_itn': 0
+        'total_itn': 0,
+        'total_left': 0
     }
     
     # Calculate totals using the correct columns
