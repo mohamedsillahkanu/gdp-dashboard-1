@@ -421,9 +421,9 @@ if uploaded_file:
         school_match = re.search(r"Name of school:\s*([^\n]+)", str(qr_text))
         school_names.append(school_match.group(1).strip() if school_match else None)
 
-        # Extract enrollment as a number
-        enrollment_match = re.search(r"Enrollment:\s*(\d+)", qr_text, re.IGNORECASE)
-        enrollments.append(int(enrollment_match.group(1)) if enrollment_match else None)
+        # Extract enrollment as text or number
+        enrollment_match = re.search(r"Enrollment:\s*([^\n]+)", qr_text, re.IGNORECASE)
+        enrollments.append(enrollment_match.group(1).strip() if enrollment_match else None)
         
     # Create a new DataFrame with extracted values
     extracted_df = pd.DataFrame({
