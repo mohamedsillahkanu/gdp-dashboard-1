@@ -393,7 +393,7 @@ if uploaded_file:
         gdf = None
     
     # Create empty lists to store extracted data
-    districts, chiefdoms, phu_names, community_names, school_names = [], [], [], [], []
+    districts, chiefdoms, phu_names, community_names, school_names, enrollments = [], [], [], [], [], []
     
     # Process each row in the "Scan QR code" column
     for qr_text in df_original["Scan QR code"]:
@@ -403,6 +403,8 @@ if uploaded_file:
             phu_names.append(None)
             community_names.append(None)
             school_names.append(None)
+            enrollments.append(None)
+            
             continue
             
         # Extract values using regex patterns
@@ -456,7 +458,8 @@ if uploaded_file:
         "Chiefdom": ["District", "Chiefdom"],
         "PHU Name": ["District", "Chiefdom", "PHU Name"],
         "Community Name": ["District", "Chiefdom", "PHU Name", "Community Name"],
-        "School Name": ["District", "Chiefdom", "PHU Name", "Community Name", "School Name"]
+        "School Name": ["District", "Chiefdom", "PHU Name", "Community Name", "School Name"],
+        "Enrollment": ["District", "Chiefdom", "PHU Name", "Community Name", "School Name", "Enrollment"]
     }
     
     # Initialize filtered dataframe with the full dataset
